@@ -1,0 +1,194 @@
+ --INSERT SCRIPT
+CREATE SEQUENCE film_seq START WITH 1000000000;
+CREATE SEQUENCE copy_seq START WITH 10000000000000000000;
+CREATE SEQUENCE crew_member_seq;
+CREATE SEQUENCE participation_seq;
+CREATE SEQUENCE subscription_seq;
+CREATE SEQUENCE cust_seq START WITH 100000000000000;
+CREATE SEQUENCE address_seq;
+CREATE SEQUENCE payment_seq;
+CREATE SEQUENCE queue_seq;
+CREATE SEQUENCE rental_seq;
+	
+INSERT INTO Subscription_type (subscription_type_id,subscription_type_name,monthly_fee,
+	rental_limit)
+	VALUES(10000,'3-at-a-time',17.99,3);
+INSERT INTO Subscription_type (subscription_type_id,subscription_type_name,monthly_fee,
+	rental_limit,monthly_limit)
+	VALUES(10001,'2-at-a-time',11.99,2,4);
+
+INSERT INTO Film (film_id,title,description,genre)
+	VALUES (film_seq.NEXTVAL,'Gone with the Wind',
+		'American classic romance set in the civil war era','Drama');
+INSERT INTO Film (film_id,title,description,genre)
+	VALUES (film_seq.NEXTVAL,'Bill and Ted\'s Excellent Adventure','Slapstick comedy about a 
+		couple of idiots time travelling','Comedy');
+INSERT INTO Film (film_id,title,description,genre)
+	VALUES (film_seq.NEXTVAL,'Star Wars','Wars in space on and around a bunch of planets','Sci-Fi');
+INSERT INTO Film (film_id,title,description,genre)
+	VALUES (film_seq.NEXTVAL,'Juno','Oscar-nominated coming-of-age dramedy about teen pregnancy','Miscellaneous');
+INSERT INTO Film (film_id,title,description,genre)
+	VALUES (film_seq.NEXTVAL,'The Social Network','The origins of Facebook','Drama');
+INSERT INTO Film (film_id,title,description,genre)
+	VALUES (film_seq.NEXTVAL,'Silence of the Lambs','A cannibal helps an FBI agent solve a serial murder case','Thriller');
+INSERT INTO Film (film_id,title,description,genre)
+	VALUES (film_seq.NEXTVAL,'Star Trek The Movie','Spock just wants a heart','Sci-Fi');
+INSERT INTO Film (film_id,title,description,genre)
+	VALUES (film_seq.NEXTVAL,'Erin Brockovitch','A woman tries to save her small town from corporate contamination','Drama');
+INSERT INTO Film (film_id,title,description,genre)
+	VALUES (film_seq.NEXTVAL,'Dude Where\'s my Car','Looking for the car','Comedy');
+INSERT INTO Film (film_id,title,description,genre)
+	VALUES (film_seq.NEXTVAL,'Clockwork Orange','Futuristic story based on American novel','Miscellaneous');	
+
+INSERT INTO Crew_member (crew_member_id,crew_member_name)
+	VALUES(crew_member_seq.NEXTVAL,'Vivienne Lee');
+INSERT INTO Crew_member (crew_member_id,crew_member_name)
+	VALUES(crew_member_seq.NEXTVAL,'Clark Gable');
+INSERT INTO Crew_member (crew_member_id,crew_member_name)
+	VALUES(crew_member_seq.NEXTVAL,'Keanu Reeves');
+INSERT INTO Crew_member (crew_member_id,crew_member_name)
+	VALUES(crew_member_seq.NEXTVAL,'Stephen Spielberg');
+INSERT INTO Crew_member (crew_member_id,crew_member_name)
+		VALUES (crew_member_seq.NEXTVAL, 'George Lucas');
+INSERT INTO Crew_member (crew_member_id,crew_member_name)
+	VALUES(crew_member_seq.NEXTVAL,'Michael Cera');		
+		
+INSERT INTO Participation (participation_id,film_id,crew_member_id,participation_description)
+	VALUES (participation_seq.NEXTVAL,1000000000,1,'Actor');
+INSERT INTO Participation (participation_id,film_id,crew_member_id,participation_description)
+	VALUES (participation_seq.NEXTVAL,1000000000,2,'Actor');
+INSERT INTO Participation (participation_id,film_id,crew_member_id,participation_description)
+	VALUES (participation_seq.NEXTVAL,1000000001,3,'Actor');
+INSERT INTO Participation (participation_id,film_id,crew_member_id,participation_description)
+	VALUES (participation_seq.NEXTVAL,1000000002,4,'Producer');
+INSERT INTO Participation (participation_id,film_id,crew_member_id,participation_description)
+	VALUES (participation_seq.NEXTVAL,1000000002,5,'Director');
+INSERT INTO Participation (participation_id,film_id,crew_member_id,participation_description)
+	VALUES (participation_seq.NEXTVAL,1000000003,6,'Actor');	
+			
+	
+INSERT INTO Copy (copy_id,film_id,availability)
+	VALUES (copy_seq.NEXTVAL,1000000000,'y');
+INSERT INTO Copy (copy_id,film_id,availability)
+	VALUES (copy_seq.NEXTVAL,1000000001,'y');		
+INSERT INTO Copy (copy_id,film_id,availability)
+	VALUES (copy_seq.NEXTVAL,1000000001,'y');		
+INSERT INTO Copy (copy_id,film_id,availability)
+	VALUES (copy_seq.NEXTVAL,1000000001,'y');		
+INSERT INTO Copy (copy_id,film_id,availability)
+	VALUES (copy_seq.NEXTVAL,1000000002,'y');		
+INSERT INTO Copy (copy_id,film_id,availability)
+	VALUES (copy_seq.NEXTVAL,1000000003,'y');		
+INSERT INTO Copy (copy_id,film_id,availability)
+	VALUES (copy_seq.NEXTVAL,1000000004,'y');		
+INSERT INTO Copy (copy_id,film_id,availability)
+	VALUES (copy_seq.NEXTVAL,1000000005,'y');		
+INSERT INTO Copy (copy_id,film_id,availability)
+	VALUES (copy_seq.NEXTVAL,1000000006,'y');		
+INSERT INTO Copy (copy_id,film_id,availability)
+	VALUES (copy_seq.NEXTVAL,1000000007,'y');		
+INSERT INTO Copy (copy_id,film_id,availability)
+	VALUES (copy_seq.NEXTVAL,1000000008,'y');		
+INSERT INTO Copy (copy_id,film_id,availability)
+	VALUES (copy_seq.NEXTVAL,1000000009,'y');		
+INSERT INTO Copy (copy_id,film_id,availability)
+	VALUES (copy_seq.NEXTVAL,1000000009,'y');			
+INSERT INTO Copy (copy_id,film_id,availability)
+	VALUES (copy_seq.NEXTVAL,1000000008,'y');	
+
+INSERT INTO Customer (customer_id,cust_first_name,cust_last_name,account_balance)
+	VALUES (cust_seq.NEXTVAL,'John','Glass',0.00);
+INSERT INTO Customer (customer_id,cust_first_name,cust_last_name,account_balance)
+	VALUES (cust_seq.NEXTVAL,'Kim','Ellison',0.00);
+INSERT INTO Customer (customer_id,cust_first_name,cust_last_name,account_balance)
+	VALUES (cust_seq.NEXTVAL,'Faye','Kennedy',0.00);
+INSERT INTO Customer (customer_id,cust_first_name,cust_last_name,account_balance)
+	VALUES (cust_seq.NEXTVAL,'Abigail','O''Keefe',0.00);
+INSERT INTO Customer (customer_id,cust_first_name,cust_last_name,account_balance)
+	VALUES (cust_seq.NEXTVAL,'Meredith','Bernstein',0.00);
+INSERT INTO Customer (customer_id,cust_first_name,cust_last_name,account_balance)
+	VALUES (cust_seq.NEXTVAL,'Zev','Abbas',0.00);
+INSERT INTO Customer (customer_id,cust_first_name,cust_last_name,account_balance)
+	VALUES (cust_seq.NEXTVAL,'Ali','Gomez',0.00);
+INSERT INTO Customer (customer_id,cust_first_name,cust_last_name,account_balance)
+	VALUES (cust_seq.NEXTVAL,'Beatrice','Fancher',0.00);
+INSERT INTO Customer (customer_id,cust_first_name,cust_last_name,account_balance)
+	VALUES (cust_seq.NEXTVAL,'Oliver','Quinton',0.00);
+INSERT INTO Customer (customer_id,cust_first_name,cust_last_name,account_balance)
+	VALUES (cust_seq.NEXTVAL,'Matthew','George',0.00);
+INSERT INTO Customer (customer_id,cust_first_name,cust_last_name,account_balance)
+	VALUES (cust_seq.NEXTVAL,'Amy','Boehner',0.00);
+INSERT INTO Customer (customer_id,cust_first_name,cust_last_name,account_balance)
+	VALUES (cust_seq.NEXTVAL,'Wesley','Harrison',0.00);
+INSERT INTO Customer (customer_id,cust_first_name,cust_last_name,account_balance)
+	VALUES (cust_seq.NEXTVAL,'Wyatt','Godfrey',0.00);
+INSERT INTO Customer (customer_id,cust_first_name,cust_last_name,account_balance)
+	VALUES (cust_seq.NEXTVAL,'Alia','Layli',0.00);
+INSERT INTO Customer (customer_id,cust_first_name,cust_last_name,account_balance)
+	VALUES (cust_seq.NEXTVAL,'Faris','Ames',0.00);
+  
+INSERT INTO Subscription (subscription_id,subscription_type_id,date_started)
+	VALUES (subscription_seq.NEXTVAL,10000,SYSDATE);
+UPDATE Customer
+	SET subscription_id = subscription_seq.NEXTVAL
+	WHERE customer_id = 100000000000000;
+INSERT INTO Subscription (subscription_id,subscription_type_id,date_started)
+	VALUES (subscription_seq.NEXTVAL,10000,SYSDATE);
+UPDATE Customer
+	SET subscription_id = subscription_seq.NEXTVAL
+	WHERE customer_id = 100000000000001;	
+INSERT INTO Subscription (subscription_id,subscription_type_id,date_started)
+	VALUES (subscription_seq.NEXTVAL,10000,SYSDATE);
+UPDATE Customer
+	SET subscription_id = subscription_seq.NEXTVAL
+	WHERE customer_id = 100000000000002;
+INSERT INTO Subscription (subscription_id,subscription_type_id,date_started)
+	VALUES (subscription_seq.NEXTVAL,10000,SYSDATE);
+UPDATE Customer
+	SET subscription_id = subscription_seq.NEXTVAL
+	WHERE customer_id = 1000000000000003;
+INSERT INTO Subscription (subscription_id,subscription_type_id,date_started)
+	VALUES (subscription_seq.NEXTVAL,10000,SYSDATE);
+UPDATE Customer
+	SET subscription_id = subscription_seq.NEXTVAL
+	WHERE customer_id = 100000000000004;
+INSERT INTO Subscription (subscription_id,subscription_type_id,date_started)
+	VALUES (subscription_seq.NEXTVAL,10001,SYSDATE);
+UPDATE Customer
+	SET subscription_id = subscription_seq.NEXTVAL
+	WHERE customer_id = 100000000000005;
+INSERT INTO Subscription (subscription_id,subscription_type_id,date_started)
+	VALUES (subscription_seq.NEXTVAL,10001,SYSDATE);
+UPDATE Customer
+	SET subscription_id = subscription_seq.NEXTVAL
+	WHERE customer_id = 100000000000006;
+INSERT INTO Subscription (subscription_id,subscription_type_id,date_started)
+	VALUES (subscription_seq.NEXTVAL,10001,SYSDATE);
+UPDATE Customer
+	SET subscription_id = subscription_seq.NEXTVAL
+	WHERE customer_id = 100000000000007;
+INSERT INTO Subscription (subscription_id,subscription_type_id,date_started)
+	VALUES (subscription_seq.NEXTVAL,10001,SYSDATE);
+UPDATE Customer
+	SET subscription_id = subscription_seq.NEXTVAL
+	WHERE customer_id = 100000000000008;
+INSERT INTO Subscription (subscription_id,subscription_type_id,date_started)
+	VALUES (subscription_seq.NEXTVAL,10001,SYSDATE);
+UPDATE Customer
+	SET subscription_id = subscription_seq.NEXTVAL
+	WHERE customer_id = 100000000000009;	
+
+INSERT INTO Queue (queue_id,film_id,customer_id,move_to_front)
+VALUES (queue_seq.NEXTVAL,(SELECT film_id FROM Film where title = 'Star Wars'),
+  (SELECT customer_id FROM Customer WHERE cust_last_name = 'Glass'),'y');  
+INSERT INTO Queue (queue_id,film_id,customer_id,move_to_front)
+VALUES (queue_seq.NEXTVAL,(SELECT film_id FROM Film where title = 'Juno'),
+  (SELECT customer_id FROM Customer WHERE cust_last_name = 'Glass'),'n');  
+  INSERT INTO Queue (queue_id,film_id,customer_id,move_to_front)
+VALUES (queue_seq.NEXTVAL,(SELECT film_id FROM Film where title = 'Juno'),
+  (SELECT customer_id FROM Customer WHERE cust_last_name = 'Abbas'),'n');    
+  
+--Hard-coded initial rentals
+
+
+		

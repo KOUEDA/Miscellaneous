@@ -1,0 +1,153 @@
+--USE CASE SCRIPT
+
+--1
+SELECT title
+FROM Film
+JOIN Participation ON Participation.film_id = Film.film_id
+JOIN Crew_member ON Crew_member.crew_member_id = Participation.crew_member_id
+WHERE Crew_member.crew_member_name IN ('George Lucas','Rich Christiano')
+	AND Participation.participation_description = 'Director';
+
+--2
+SELECT Customer.cust_first_name,Customer.cust_last_name,Subscription_type.subscription_type_name
+FROM Customer
+JOIN Subscription ON Customer.subscription_id = Subscription.customer_id
+JOIN Subscription_type ON Subscription.subscription_type_id = Subscription_type.subscription_type_id;
+
+--3
+CREATE OR REPLACE PROCEDURE check_rental_limit(cust_renting IN NUMBER,rent_limit OUT NUMBER)
+AS
+BEGIN
+	SELECT rental_limit INTO rent_limit FROM Subscription_type
+		JOIN Subscription ON Subscription.subscription_type_id = Subscription_type.subscription_type_id
+		JOIN Customer ON Subscription.subscription_id = Customer.subscription_id
+    WHERE Customer.customer_id = cust_renting;
+END;
+/
+
+CREATE OR REPLACE PROCEDURE check_monthly_limit(cust_renting IN NUMBER,month_limit OUT NUMBER)
+AS
+BEGIN
+	SELECT monthly_limit INTO month_limit FROM Subscription_type
+		JOIN Subscription ON Subscription.subscription_type_id = Subscription_type.subscription_type_id
+		JOIN Customer ON Subscription.subscription_id = Customer.customer_id
+    WHERE Customer.customer_id = cust_renting;
+END;
+/
+
+CREATE OR REPLACE TRIGGER send_priority_rental
+AFTER INSERT ON Queue
+FOR EACH ROW
+BEGIN
+  IF :NEW.move_to_front = 'y'
+  THEN IF (EXEC check_rental_limit(:NEW.customer_id,rent_limit) > 
+      (SELECT COUNT(*) FROM Queue 
+        WHERE customer_id = :NEW.customer_id) AND rental_id IS NOT NULL)
+       THEN IF (EXEC check_for_copy(:NEW.film_id,copies_available))>0
+              THEN UPDATE Queue
+                    SET rental_id = rental_seq.NEXTVAL
+                    WHERE queue_id = :NEW.queue_id;
+                    EXEC create_rental(EXEC dispatch_copy(film_id,sent_copy),:NEW.rental_id);
+            END IF;
+        END IF;
+   END IF;
+END;
+/
+
+CREATE OR REPLACE PROCEDURE check_for_copy(requested_film_id IN NUMBER,copies_available OUT NUMBER)
+AS
+BEGIN
+  SELECT COUNT(*) INTO copies_available FROM Copy
+  WHERE film_id = requested_film_id;
+END;
+/
+
+CREATE OR REPLACE PROCEDURE dispatch_copy(requested_film_id IN NUMBER,sent_copy OUT NUMBER)
+AS
+BEGIN
+  SELECT MIN(copy_id) INTO sent_copy FROM Copy
+  WHERE film_id = requested_film_id;
+  DBMS_OUTPUT.PUT_LINE('Copy selected for delivery');
+END;
+/
+
+CREATE OR REPLACE PROCEDURE create_rental(dispatched_copy IN NUMBER,new_rental IN NUMBER)
+AS
+BEGIN
+  INSERT INTO Rental (rental_id,copy_id,date_mailed)
+  VALUES (new_rental,dispatched_copy,SYSDATE);
+END;
+/
+
+--4
+SELECT title FROM Film
+WHERE film_id NOT IN 
+(SELECT film_id FROM Queue 
+  WHERE customer_id = (SELECT customer_id FROM Customer WHERE cust_last_name = 'Glass'));
+
+--5
+CREATE OR REPLACE PROCEDURE cancel_no_return_fee(cancel_cust_id IN NUMBER)
+AS
+BEGIN
+	IF EXISTS (SELECT * FROM Rental
+		JOIN Queue ON Queue.rental_id = Rental.rental_id
+		WHERE Queue.customer_id = cancel_cust_id AND Rental.date_returned IS NULL)
+	THEN UPDATE Customer
+		SET acct_balance = acct_balance + 25.00
+		WHERE customer_id = cancel_cust_id;
+  END IF;  
+END;
+/
+
+--6
+--I made subscription_id a foreign key in Customer that can be null,
+--and in the Subscription table the termination date can be null. 
+--When a customer cancels their subscription, the date_terminated column updates and the subscription_id is set to null.
+CREATE OR REPLACE PROCEDURE terminate_subscription(end_subscription_id IN NUMBER)
+AS
+BEGIN
+  UPDATE Subscription
+  SET date_terminated = SYSDATE
+  WHERE subscription_id = end_subscription_id;
+  UPDATE Customer
+  SET subscription_id = NULL
+  WHERE subscription_id = end_subscription_id;
+END; 
+/
+
+--7
+SELECT f1.title FROM Film f1
+WHERE (SELECT COUNT(*) FROM Copy c2
+        WHERE f1.film_id = c2.film_id)=
+        (SELECT COUNT(*) FROM Copy c3
+        WHERE f1.film_id = c3.film_id AND availability = 'n');
+
+--8
+SELECT st1.subscription_type_name, st1.rental_limit, st1.monthly_limit, 
+	COUNT(s1.subscription_id) AS Number_of_Subscribers 	
+FROM Subscription_type st1
+JOIN Subscription s1 ON st1.subscription_type_id = s1.subscription_type_id
+GROUP BY st1.subscription_type_name,st1.rental_limit,st1.monthly_limit
+HAVING COUNT(s1.subscription_id) = (SELECT MAX(Num_subscribers) FROM
+  (SELECT COUNT(s2.subscription_id) AS Num_subscribers 	
+  FROM Subscription_type st2
+  JOIN Subscription s2 ON st2.subscription_type_id = s2.subscription_type_id
+  GROUP BY st2.subscription_type_id));
+
+--9
+SELECT c1.cust_first_name,c1.cust_last_name,f1.title,
+	COUNT(q1.rental_id) AS Number_of_times_rented
+FROM Customer c1
+JOIN Queue q1 ON q1.customer_id = c1.customer_id
+JOIN Film f1 ON f1.film_id = q1.film_id
+GROUP BY c1.cust_first_name,c1.cust_last_name,f1.title
+HAVING COUNT(q1.rental_id) > 1;
+
+--10
+SELECT f1.title,
+COUNT(DISTINCT customer_id) AS Number_of_renters
+FROM Film f1
+JOIN Queue q1 ON f1.film_id = q1.film_id
+GROUP BY f1.title
+ORDER BY Number_of_renters DESC;	
+	
